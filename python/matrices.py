@@ -1,6 +1,6 @@
 # @filename matrix.py
 # @author John (Jack) Bial
-# @modified 06/11/2025
+# @modified 08/02/2026
 # @copyright Public Domain
 # @brief Implements a matrix class (Field = C)
 
@@ -43,6 +43,30 @@ class Matrix:
                         matrix[i][j] = item
 
         self.matrix = matrix
+
+    # Getter method for a matrix entry
+    def get(self, i, j):
+        value = self.matrix[i][j]
+        return value
+
+    # Setter method for a matrix entry
+    def set(self, i, j, value):
+        self.matrix[i][j] = value
+
+    # Getter method for a matrix's row dimension
+    def get_rowdim(self):
+        value = self.rowdim
+        return value
+
+    # Getter method for a matrix's column dimension
+    def get_coldim(self):
+        value = self.coldim
+        return value
+
+    # Getter method for a matrix's array representation
+    def get_array(self):
+        array = deepcopy(self.matrix)
+        return array
 
     # Checks if the matrix is a square matrix
     def is_square(self):
@@ -209,7 +233,8 @@ class Matrix:
             product = Matrix(self.rowdim, self.coldim, deepcopy(self.matrix))
             for i in range (0, product.rowdim):
                 for j in range(0, product.coldim):
-                    product.matrix[i][j] = other * product.matrix[i][j]
+                    product.matrix[i][j] = product.matrix[i][j] * other
+                    # product.matrix[i][j] = other * product.matrix[i][j]
             return product
         
         # Checks if the factor dimensions work for matrix multiplication
@@ -482,7 +507,19 @@ class Matrix:
 '''
 VARIOUS VECTOR AND BASIS OPERATIONS
 '''
-    
+
+# Forms an identity matrix of the desired dimension
+def form_identity(dimension):
+    identity = Matrix(dimension, dimension, [])
+    for i in range(0, dimension):
+        identity.matrix.append([])
+        for j in range(0, dimension):
+            if (i == j):
+                identity.matrix[i].append(Complex(1, 0))
+            else:
+                identity.matrix[i].append(Complex(0, 0))
+    return identity
+
 # Finds the basis for the kernel of a matrix
 def kernel_basis(matrix):
 
@@ -524,11 +561,13 @@ def kernel_basis(matrix):
 
 # Implements the Euclidean Inner Product
 def euclidean_ip(v, w):
+
     product = v.dagger() * w
     return product.matrix[0][0]
 
 # Implements the Frobenius Inner Product
 def frobenius_ip(A, B):
+
     product = A.dagger() * B
     return product.trace()
 
